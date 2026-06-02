@@ -1,0 +1,720 @@
+/* =============================================
+   CSS CUSTOM PROPERTIES (VARIABLES)
+   ============================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Sidebar dimensions */
+  --sidebar-width-collapsed: 64px;
+  --sidebar-width-expanded: 250px;
+  --transition-speed: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --font-family: 'Inter', sans-serif;
+}
+
+/* ---------- LIGHT THEME (default) ---------- */
+[data-theme="light"] {
+  --color-sidebar: #1a73e8;          /* Google blue */
+  --color-sidebar-hover: #1557b0;
+  --color-header: #ffffff;
+  --color-bg: #f1f3f4;               /* Light gray background */
+  --color-card: #ffffff;
+  --color-accent: #1a73e8;
+  --text-primary: #202124;
+  --text-secondary: #5f6368;
+  --text-light: #ffffff;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.1);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.12);
+  --border: 1px solid #e0e0e0;
+}
+
+/* ---------- DARK THEME ---------- */
+[data-theme="dark"] {
+  --color-sidebar: #1e1e2f;
+  --color-sidebar-hover: #2a2a3d;
+  --color-header: #1e1e2f;
+  --color-bg: #121212;
+  --color-card: #1e1e2f;
+  --color-accent: #8ab4f8;
+  --text-primary: #e8eaed;
+  --text-secondary: #9aa0a6;
+  --text-light: #e8eaed;
+  --shadow: 0 2px 4px rgba(0,0,0,0.4);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.6);
+  --border: 1px solid #3c4043;
+}
+
+/* =============================================
+   BASE STYLES
+   ============================================= */
+body {
+  font-family: var(--font-family);
+  line-height: 1.6;
+  background-color: var(--color-bg);
+  color: var(--text-primary);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* =============================================
+   MAIN GRID CONTAINER
+   =============================================
+   Overall layout: sidebar | header
+                    sidebar | main
+   Uses min-content for sidebar column so it adapts
+   to the sidebar's width.
+*/
+.container {
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "sidebar header"
+    "sidebar main";
+  min-height: 100vh;
+}
+
+/* =============================================
+   SIDEBAR
+   =============================================
+   - Collapsed by default (icon-only)
+   - Expands on hover with smooth transition
+*/
+.sidebar {
+  grid-area: sidebar;
+  background-color: var(--color-sidebar);
+  color: var(--text-light);
+  display: grid;
+  grid-template-rows: auto 1fr;          /* Branding top, nav bottom */
+  gap: 1.5rem;
+  padding: 1.2rem 0.75rem;
+  width: var(--sidebar-width-collapsed);
+  transition: width var(--transition-speed), background-color 0.3s;
+  overflow: hidden;                      /* Hide text when collapsed */
+  white-space: nowrap;
+  z-index: 10;
+  position: relative;
+}
+
+/* Expand sidebar on hover */
+.sidebar:hover {
+  width: var(--sidebar-width-expanded);
+}
+
+/* ----- Branding (logo + title) ----- */
+.sidebar-branding {
+  display: grid;
+  grid-template-columns: auto 1fr;      /* Icon column, then title */
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 0.5rem;
+}
+
+.brand-icon {
+  font-size: 2rem;
+  transition: transform 0.2s;
+}
+
+/* Subtle icon rotation on hover */
+.sidebar:hover .brand-icon {
+  transform: rotate(10deg);
+}
+
+/* Title is hidden until sidebar hover */
+.brand-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 0.2s 0.1s, transform 0.2s 0.1s;
+}
+.sidebar:hover .brand-title {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ----- Navigation lists ----- */
+.sidebar-nav {
+  display: grid;
+  grid-template-rows: auto auto;        /* Two groups: primary & secondary */
+  gap: 1rem;
+  align-content: start;
+}
+
+.nav-list,
+.nav-list-secondary {
+  list-style: none;
+  display: grid;
+  gap: 0.2rem;
+}
+
+/* ===== Navigation link layout ===== */
+.nav-item a {
+  display: grid;
+  grid-template-columns: 44px 1fr;      /* fixed icon column slightly wider for balance */
+  align-items: center;
+  gap: 0.5rem;
+
+  /* Remove left padding so the icon column starts at the edge — centering is handled inside */
+  padding: 0.6rem 0.5rem 0.6rem 0;
+
+  border-radius: 0 24px 24px 0;
+  color: var(--text-light);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: background-color 0.2s, padding-left 0.2s;
+  overflow: hidden;
+}
+
+/* Keep active/hover background fill – safe because we still have enough width */
+.nav-item a:hover,
+.nav-item.active a {
+  background-color: var(--color-sidebar-hover);
+}
+
+/* ===== Icons perfectly centred ===== */
+.nav-item .mdi {
+  font-size: 1.6rem;
+
+  /* Use flex centering inside its own grid cell */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;                         /* fill the 44px column */
+  line-height: 1;
+  transition: transform 0.2s;
+}
+
+.nav-item a:hover .mdi {
+  transform: scale(1.15);
+}
+
+/* Text labels hidden until sidebar expands */
+.nav-text {
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 0.25s 0.05s, transform 0.25s 0.05s;
+}
+.sidebar:hover .nav-text {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* =============================================
+   HEADER
+   ============================================= */
+.header {
+  grid-area: header;
+  background-color: var(--color-header);
+  box-shadow: var(--shadow);
+  padding: 1rem 2rem;
+  display: grid;
+  grid-template-rows: auto auto;        /* Top row, bottom row */
+  gap: 1rem;
+  transition: background-color 0.3s;
+}
+
+/* ----- Top row: search + user info ----- */
+.header-top {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Search bar */
+.search-bar {
+  display: grid;
+  grid-template-columns: auto 1fr;      /* Magnifying glass + input */
+  align-items: center;
+  gap: 0.8rem;
+  background-color: var(--color-bg);
+  border-radius: 28px;
+  padding: 0.4rem 1.2rem;
+  border: 1px solid transparent;
+  transition: box-shadow 0.2s, background-color 0.2s, border-color 0.2s;
+}
+
+/* Focus style */
+.search-bar:focus-within {
+  box-shadow: 0 0 0 2px var(--color-accent);
+  background-color: var(--color-card);
+  border-color: var(--color-accent);
+}
+
+.search-icon {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.search-bar input {
+  border: none;
+  background: transparent;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  outline: none;
+  width: 100%;
+  color: var(--text-primary);
+}
+
+/* User info area (theme toggle, notifications, avatar, name) */
+.user-info {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+/* Theme toggle and notification buttons */
+.theme-toggle,
+.notification-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: color 0.2s, transform 0.2s;
+}
+
+.theme-toggle:hover,
+.notification-btn:hover {
+  color: var(--color-accent);
+  transform: scale(1.1);
+}
+
+/* Notification badge (red dot with count) */
+.notification-btn {
+  position: relative;
+}
+.notification-badge {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  background: #ea4335;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  animation: pulse 2s infinite;
+}
+
+/* Simple pulse animation */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* ----- Avatar circles (initials, no images) ----- */
+.avatar-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-accent);
+  color: white;
+  font-weight: 700;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 0.9rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  user-select: none;
+}
+
+.small-avatar {
+  width: 36px;
+  height: 36px;
+  font-size: 0.8rem;
+}
+
+.large-avatar {
+  width: 56px;
+  height: 56px;
+  font-size: 1.3rem;
+}
+
+.avatar-circle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* User name text */
+.user-name-small {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+/* ----- Bottom row: greeting + action buttons ----- */
+.header-bottom {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.user-greeting {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+
+.greeting-hi {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.greeting-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Action buttons (New, Upload, Share) */
+.header-actions {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 1.25rem;
+}
+
+/* Primary button style */
+.btn-primary {
+  background-color: var(--color-accent);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;                     /* For ripple effect */
+  transition: background-color 0.2s, box-shadow 0.2s, transform 0.1s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Ripple effect styling (created by JS) */
+.ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(0);
+  animation: ripple-animation 0.6s linear;
+  pointer-events: none;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* =============================================
+   MAIN CONTENT AREA
+   ============================================= */
+.main-content {
+  grid-area: main;
+  display: grid;
+  grid-template-columns: 3fr 1fr;       /* Projects (wider) + About Me */
+  gap: 2rem;
+  padding: 2rem;
+  background-color: var(--color-bg);
+  transition: background-color 0.3s;
+}
+
+/* ---------- Projects section ---------- */
+.projects-section {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Section header with title and project count */
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.project-count {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Projects grid using auto-fit for responsiveness */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  flex: 1;
+}
+
+/* Individual project card */
+.project-card {
+  background-color: var(--color-card);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-rows: auto 1fr auto;    /* Accent line, content, actions */
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s;
+  animation: fadeInUp 0.4s ease backwards; /* Staggered entrance */
+}
+
+/* Staggered animation delays */
+.project-card:nth-child(1) { animation-delay: 0.05s; }
+.project-card:nth-child(2) { animation-delay: 0.1s; }
+.project-card:nth-child(3) { animation-delay: 0.15s; }
+.project-card:nth-child(4) { animation-delay: 0.2s; }
+.project-card:nth-child(5) { animation-delay: 0.25s; }
+.project-card:nth-child(6) { animation-delay: 0.3s; }
+
+/* Fade-in-up animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Colored accent bar at top of card */
+.card-accent {
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-accent) 0%, #4285f4 100%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+/* Card text content */
+.card-content {
+  padding: 1.8rem 1.5rem 0.5rem 1.5rem;
+}
+
+.card-content h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: var(--text-primary);
+}
+
+.card-content p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Action buttons (star, watch, fork) */
+.card-actions {
+  padding: 0.75rem 1.5rem 1.2rem 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: end;
+  gap: 0.75rem;
+}
+
+/* Icon-only buttons */
+.icon-btn {
+  background: none;
+  border: none;
+  font-size: 1.35rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: color 0.2s, transform 0.2s;
+  border-radius: 50%;
+  padding: 4px;
+}
+
+.icon-btn:hover {
+  color: var(--color-accent);
+  transform: scale(1.2);
+  background-color: rgba(0,0,0,0.05);
+}
+
+/* ---------- Right column: About Me ---------- */
+.side-content {
+  display: grid;
+  align-content: start;
+  gap: 1.5rem;
+}
+
+.about-me {
+  background-color: var(--color-card);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  transition: background-color 0.3s;
+}
+
+.about-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.about-avatar {
+  margin-bottom: 0.2rem;
+}
+
+.about-bio {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Stats row inside About card */
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  width: 100%;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: var(--border);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-number {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* =============================================
+   TOAST NOTIFICATIONS
+   ============================================= */
+#toast-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 1000;
+}
+
+.toast {
+  background-color: #323232;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: toastIn 0.3s ease, toastOut 0.3s 2.7s ease forwards;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toast.success { background-color: #0f9d58; }
+.toast.error   { background-color: #db4437; }
+
+@keyframes toastIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes toastOut {
+  from { transform: translateX(0);    opacity: 1; }
+  to   { transform: translateX(100%); opacity: 0; }
+}
+
+/* =============================================
+   RESPONSIVE DESIGN
+   =============================================
+   On smaller screens, collapse layout vertically.
+*/
+@media (max-width: 900px) {
+  .container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "sidebar"
+      "main";
+  }
+
+  /* Sidebar becomes full width and text always visible */
+  .sidebar {
+    width: 100% !important;
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar:hover {
+    width: 100% !important;
+  }
+
+  .main-content {
+    grid-template-columns: 1fr;          /* Stack everything */
+  }
+
+  .header-top,
+  .header-bottom {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .header-actions {
+    justify-content: start;
+  }
+
+  /* Show text permanently on mobile */
+  .brand-title,
+  .nav-text {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

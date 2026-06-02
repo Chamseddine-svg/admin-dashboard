@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Pro</title>
+
+  <!-- Google Fonts: Inter for clean, modern look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Material Design Icons via Webfont -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/@mdi/font@7.2.96/css/materialdesignicons.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!--
+    =============================================
+    MAIN GRID CONTAINER
+    =============================================
+    data-testid attributes added for easy testing
+  -->
+  <div class="container" data-testid="dashboard-container">
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar" data-testid="sidebar">
+      <!-- Branding: icon + title -->
+      <div class="sidebar-branding">
+        <span class="mdi mdi-view-dashboard brand-icon"></span>
+        <h1 class="brand-title">Dashboard</h1>
+      </div>
+
+      <!-- Navigation: primary and secondary lists -->
+      <nav class="sidebar-nav">
+        <!-- Primary navigation -->
+        <ul class="nav-list">
+          <li class="nav-item active" data-testid="nav-home">
+            <a href="#">
+              <span class="mdi mdi-home"></span>
+              <span class="nav-text">Home</span>
+            </a>
+          </li>
+          <li class="nav-item" data-testid="nav-profile">
+            <a href="#">
+              <span class="mdi mdi-card-account-details-outline"></span>
+              <span class="nav-text">Profile</span>
+            </a>
+          </li>
+          <li class="nav-item" data-testid="nav-games">
+            <a href="#">
+              <!-- Games icon: controller -->
+              <span class="mdi mdi-google-controller"></span>
+              <span class="nav-text">Games</span>
+            </a>
+          </li>
+          <li class="nav-item" data-testid="nav-history">
+            <a href="#">
+              <span class="mdi mdi-clock-time-three"></span>
+              <span class="nav-text">History</span>
+            </a>
+          </li>
+          <li class="nav-item" data-testid="nav-tasks">
+            <a href="#">
+              <span class="mdi mdi-file-document-multiple"></span>
+              <span class="nav-text">Tasks</span>
+            </a>
+          </li>
+          <li class="nav-item" data-testid="nav-communities">
+            <a href="#">
+              <span class="mdi mdi-account-group"></span>
+              <span class="nav-text">Communities</span>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Secondary navigation (settings, support, privacy) -->
+        <ul class="nav-list-secondary">
+          <li class="nav-item" data-testid="nav-settings">
+            <a href="#">
+              <span class="mdi mdi-cog"></span>
+              <span class="nav-text">Settings</span>
+            </a>
+          </li>
+          <li class="nav-item" data-testid="nav-support">
+            <a href="#">
+              <span class="mdi mdi-help-box"></span>
+              <span class="nav-text">Support</span>
+            </a>
+          </li>
+          <li class="nav-item" data-testid="nav-privacy">
+            <a href="#">
+              <span class="mdi mdi-shield-check"></span>
+              <span class="nav-text">Privacy</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="header" data-testid="header">
+      <!-- Top row: search + user controls -->
+      <div class="header-top">
+        <!-- Search bar -->
+        <div class="search-bar" data-testid="search-container">
+          <label for="search" class="search-icon">
+            <span class="mdi mdi-magnify"></span>
+          </label>
+          <input
+            type="text"
+            id="search"
+            placeholder="Search projects..."
+            data-testid="search-input"
+          />
+        </div>
+
+        <!-- User info: theme toggle, notifications, avatar, name -->
+        <div class="user-info">
+          <!-- Dark/Light theme toggle button -->
+          <button
+            class="icon-btn theme-toggle"
+            aria-label="Toggle theme"
+            data-testid="theme-toggle"
+          >
+            <!-- Icon changes dynamically (sun/moon) via JS -->
+            <span class="mdi theme-icon"></span>
+          </button>
+
+          <!-- Notifications with badge -->
+          <button
+            class="icon-btn notification-btn"
+            aria-label="Notifications"
+            data-testid="notification-btn"
+          >
+            <span class="mdi mdi-bell-ring-outline"></span>
+            <span class="notification-badge" data-testid="notification-badge">3</span>
+          </button>
+
+          <!-- Small avatar (initials) -->
+          <div
+            class="avatar-circle small-avatar"
+            data-initials="MO"
+            data-testid="user-avatar-small"
+          >
+            MO
+          </div>
+          <span class="user-name-small">Morgan Oakley</span>
+        </div>
+      </div>
+
+      <!-- Bottom row: greeting + action buttons -->
+      <div class="header-bottom">
+        <!-- User greeting -->
+        <div class="user-greeting">
+          <div
+            class="avatar-circle large-avatar"
+            data-initials="MO"
+            data-testid="user-avatar-large"
+          >
+            MO
+          </div>
+          <div class="greeting-text">
+            <p class="greeting-hi">Hi there,</p>
+            <p class="greeting-name">Morgan Oakley (@morgan)</p>
+          </div>
+        </div>
+
+        <!-- Action buttons (New, Upload, Share) -->
+        <div class="header-actions">
+          <button class="btn-primary ripple" data-testid="btn-new">New</button>
+          <button class="btn-primary ripple" data-testid="btn-upload">Upload</button>
+          <button class="btn-primary ripple" data-testid="btn-share">Share</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="main-content" data-testid="main-content">
+      <!-- Projects section (left column) -->
+      <section class="projects-section" data-testid="projects-section">
+        <div class="section-header">
+          <h2 class="section-title">Your Projects</h2>
+          <span class="project-count" data-testid="project-count">6 projects</span>
+        </div>
+
+        <!-- Grid of project cards -->
+        <div class="projects-grid" data-testid="projects-grid">
+          <!-- Card 1 -->
+          <article class="project-card" data-testid="project-card" data-project="super-cool">
+            <div class="card-accent"></div>
+            <div class="card-content">
+              <h3>Super Cool Project</h3>
+              <p>Sed tempus ut lacus ut scelerisque. Suspendisse sollicitudin nibh erat, id facilisis felis accumsan nec.</p>
+            </div>
+            <div class="card-actions">
+              <button class="icon-btn" aria-label="Favorite"><span class="mdi mdi-star-plus-outline"></span></button>
+              <button class="icon-btn" aria-label="Watch"><span class="mdi mdi-eye-plus-outline"></span></button>
+              <button class="icon-btn" aria-label="Fork"><span class="mdi mdi-source-fork"></span></button>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="project-card" data-testid="project-card" data-project="less-cool">
+            <div class="card-accent"></div>
+            <div class="card-content">
+              <h3>Less Cool Project</h3>
+              <p>Nullam condimentum ipsum ut lectus vehicula consectetur. Quisque sed dolor tincidunt.</p>
+            </div>
+            <div class="card-actions">
+              <button class="icon-btn" aria-label="Favorite"><span class="mdi mdi-star-plus-outline"></span></button>
+              <button class="icon-btn" aria-label="Watch"><span class="mdi mdi-eye-plus-outline"></span></button>
+              <button class="icon-btn" aria-label="Fork"><span class="mdi mdi-source-fork"></span></button>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="project-card" data-testid="project-card" data-project="impossible-app">
+            <div class="card-accent"></div>
+            <div class="card-content">
+              <h3>Impossible App</h3>
+              <p>In hac habitasse platea dictumst. Vivamus dictum rutrum arcu, a placerat velit sagittis id.</p>
+            </div>
+            <div class="card-actions">
+              <button class="icon-btn" aria-label="Favorite"><span class="mdi mdi-star-plus-outline"></span></button>
+              <button class="icon-btn" aria-label="Watch"><span class="mdi mdi-eye-plus-outline"></span></button>
+              <button class="icon-btn" aria-label="Fork"><span class="mdi mdi-source-fork"></span></button>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="project-card" data-testid="project-card" data-project="easy-peasy">
+            <div class="card-accent"></div>
+            <div class="card-content">
+              <h3>Easy Peasy App</h3>
+              <p>Etiam cursus eros ac efficitur fringilla. Vestibulum dignissim urna eget accumsan aliquam.</p>
+            </div>
+            <div class="card-actions">
+              <button class="icon-btn" aria-label="Favorite"><span class="mdi mdi-star-plus-outline"></span></button>
+              <button class="icon-btn" aria-label="Watch"><span class="mdi mdi-eye-plus-outline"></span></button>
+              <button class="icon-btn" aria-label="Fork"><span class="mdi mdi-source-fork"></span></button>
+            </div>
+          </article>
+
+          <!-- Card 5 -->
+          <article class="project-card" data-testid="project-card" data-project="ad-blocker">
+            <div class="card-accent"></div>
+            <div class="card-content">
+              <h3>Ad Blocker</h3>
+              <p>Quisque eget rutrum nisl. Nam augue justo, cursus vitae metus vel, pharetra hendrerit felis.</p>
+            </div>
+            <div class="card-actions">
+              <button class="icon-btn" aria-label="Favorite"><span class="mdi mdi-star-plus-outline"></span></button>
+              <button class="icon-btn" aria-label="Watch"><span class="mdi mdi-eye-plus-outline"></span></button>
+              <button class="icon-btn" aria-label="Fork"><span class="mdi mdi-source-fork"></span></button>
+            </div>
+          </article>
+
+          <!-- Card 6 -->
+          <article class="project-card" data-testid="project-card" data-project="money-maker">
+            <div class="card-accent"></div>
+            <div class="card-content">
+              <h3>Money Maker</h3>
+              <p>Praesent convallis, libero quis congue elementum, nunc ante faucibus sapien.</p>
+            </div>
+            <div class="card-actions">
+              <button class="icon-btn" aria-label="Favorite"><span class="mdi mdi-star-plus-outline"></span></button>
+              <button class="icon-btn" aria-label="Watch"><span class="mdi mdi-eye-plus-outline"></span></button>
+              <button class="icon-btn" aria-label="Fork"><span class="mdi mdi-source-fork"></span></button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Right column: About Me (replaces trending) -->
+      <aside class="side-content" data-testid="side-content">
+        <section class="about-me" data-testid="about-me">
+          <h2 class="section-title">About Me</h2>
+          <div class="about-card">
+            <div class="about-avatar">
+              <div class="avatar-circle large-avatar" data-initials="MO">MO</div>
+            </div>
+            <p class="about-bio">
+              Senior full-stack developer with a passion for building clean, performant web apps.
+              Loves CSS Grid, dark mode, and turning coffee into code.
+            </p>
+            <div class="about-stats">
+              <div class="stat">
+                <span class="stat-number">6+</span>
+                <span class="stat-label">Projects</span>
+              </div>
+              <div class="stat">
+                <span class="stat-number">4k</span>
+                <span class="stat-label">Followers</span>
+              </div>
+              <div class="stat">
+                <span class="stat-number">120</span>
+                <span class="stat-label">Stars</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Toast notification container (fixed position) -->
+  <div id="toast-container" data-testid="toast-container"></div>
+
+  <!-- Main JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
